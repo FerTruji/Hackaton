@@ -1,8 +1,7 @@
 
 import { useEffect, useState } from "react";
-import { Container, Table} from "react-bootstrap"; 
-
- 
+import { Container, Table } from "react-bootstrap";
+import './CovalentTable.css'
 
 const AppCovalent = () => {
   const [datos, setDatos] = useState();
@@ -12,81 +11,48 @@ const AppCovalent = () => {
   useEffect(() => {
     fetch(
       "https://api.covalenthq.com/v1/pricing/tickers/?quote-currency=USD&format=JSON&key=ckey_2ece492703d64924bec1968f88e"
-     
-      )
+    )
       .then((respuesta) => respuesta.json())
       .then((data) => {
         console.log(data.data.items);
         setIsLoading(false);
         // aca filter
-        const filtro = data.data.items.filter((element) => element.rank <= 10);
+        const filtro = data.data.items.filter((element) => element.rank <= 15);
         setDatos(filtro);
       });
   }, []);
 
   return (
-    <Container className="bg_table ">
-  
-  
-    <>
-      {isLoading
-        ? "Cargando"
-        : datos.map((element, index) => {
-            return (
-
-              <>
- <Table striped bordered hover variant="dark">
- <thead>
-    <tr>
-      <th>NOMBRE</th>
-      <th>LOGO</th>
-      <th>TASA DE COTIZACION</th>
-      <th>RANGO</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>{element.contract_name}</td>
-      <td>{element.contract_logo_url}</td>
-      <td>{element.contract_quote_rate}</td>
-      <td>{element.contact_rank5}</td>
-    </tr>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-  </tbody>
-</Table>
-      </>)
-})};           
-   </>
-   </Container>
+    <Container className="bg_table covalent-container ">
+      <Table striped bordered hover variant="dark">
+        <thead>
+          <tr>
+            <th>NOMBRE</th>
+            <th>SYMBOL</th>
+            <th>TASA DE COTIZACION</th>
+            <th>RANGO</th>
+          </tr>
+        </thead>
+        <>
+          {isLoading
+            ? "Cargando"
+            : datos.map((element, index) => {
+                return (
+                  <>
+                    <tbody key={index}>
+                      <tr>
+                        <td>{element.contract_name}</td>
+                        <td>{element.contract_ticker_symbol}</td>
+                        <td>{element.quote_rate} USD</td> 
+                        <td>{element.rank}</td>
+                      </tr>
+                    </tbody>
+                  </>
+                );
+              })};
+        </>
+      </Table>
+    </Container>
   );
 };
 
